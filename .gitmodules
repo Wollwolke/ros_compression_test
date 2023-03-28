@@ -1,0 +1,3 @@
+[submodule "data-compressor"]
+	path = data-compressor
+	url = https://github.com/CenterForSecureEnergyInformatics/data-compressor.git
