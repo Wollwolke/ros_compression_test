@@ -10,7 +10,7 @@ times = {}
 samples = {}
 algorithms = ["lzmh", "zlib", "bzip2", "lzma", "zstd", "lzo", "brotli"]
 
-ROUNDS = 10
+ROUNDS = 20
 
 def init():
     global sizes
@@ -304,7 +304,7 @@ def main():
     j["times"] = times
     j["sizes"] = sizes
 
-    with open("resuts.json","w") as file:
+    with open("results.json","w") as file:
         json.dump(j, file)
 
 
