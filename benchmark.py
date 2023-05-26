@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+from collections import defaultdict
 from subprocess import Popen, PIPE
 import resource
 import filecmp
@@ -7,41 +8,38 @@ import json
 
 sizes = {}
 times = {}
-samples = {}
-algorithms = ["lzmh", "zlib", "bzip2", "lzma", "zstd", "lzo", "brotli"]
+samples = defaultdict(list)
+algorithms = ["zlib", "bzip2", "lzma", "zstd", "lzo", "brotli", "lzmh"]
+filenames = ["battery", "detectedImages", "image", "humidity", "position", "temperature", "tempSensor"]
 
-ROUNDS = 20
+ROUNDS = 5
 
 def init():
     global sizes
     global times
+    global samples
 
-    with open("data/temperature.bin", "rb") as file:
-        samples["temperature"] = file.read()
-    with open("data/battery.bin", "rb") as file:
-        samples["battery"] = file.read()
-    with open("data/humidity.bin", "rb") as file:
-        samples["humidity"] = file.read()
-    with open("data/image.bin", "rb") as file:
-        samples["image"] = file.read()
-    with open("data/position.bin", "rb") as file:
-        samples["position"] = file.read()
-    with open("data/tempSensor.bin", "rb") as file:
-        samples["tempSensor"] = file.read()
+    for filename in filenames:
+        for cnt in range(10):
+            with open(f"data/new/{filename}{cnt}.bin", "rb") as file:
+                samples[filename].append(file.read())
 
-    for sample, data in samples.items():
-        if sample not in sizes.keys():
-            sizes[sample] = {}
-            times[sample] = {}
-        sizes[sample]["raw"] = len(data)
+    for sampleType, dataList in samples.items():
+        if sampleType not in sizes.keys():
+            sizes[sampleType] = {}
+            times[sampleType] = {}
+        size = 0
+        for sample in dataList:
+            size += len(sample)
+        sizes[sampleType]["raw"] = size / len(dataList)
         for algo in algorithms:
-            sizes[sample][algo] = {}
-            times[sample][algo] = {}
+            sizes[sampleType][algo] = {}
+            times[sampleType][algo] = {}
 
-def zlib():
-    global sizes
-    global times
-    for sample, data in samples.items():
+class Algos:
+    def zlib(self, data):
+        sizes = {}
+        times = {}
         for lvl in range(1,10):
             localTimes = []
             compressedSize = 0
@@ -55,7 +53,7 @@ def zlib():
                 # check decompression
                 process = Popen(["zlib-flate", "-uncompress"], stdout=PIPE, stdin=PIPE)
                 if process.communicate(input=compressedData)[0] != data:
-                    raise ValueError(f"Error uncompressing zlib lvl {lvl}\t{sample}")
+                    raise ValueError(f"Error uncompressing zlib lvl {lvl}")
 
                 # Check compressed size
                 if i != 0 and compressedSize != len(compressedData):
@@ -69,13 +67,13 @@ def zlib():
                 localTimes.append(utime + stime)
 
             # store results
-            sizes[sample]["zlib"][lvl] = compressedSize
-            times[sample]["zlib"][lvl] = sum(localTimes) / ROUNDS
+            sizes[lvl] = compressedSize
+            times[lvl] = sum(localTimes) / ROUNDS
+        return sizes, times
 
-def brotli():
-    global sizes
-    global times
-    for sample, data in samples.items():
+    def brotli(self, data):
+        sizes = {}
+        times = {}
         for lvl in range(12):
             localTimes = []
             compressedSize = 0
@@ -89,7 +87,7 @@ def brotli():
                 # check decompression
                 process = Popen(["brotli", "--stdout", "--force", "--decompress"], stdout=PIPE, stdin=PIPE)
                 if process.communicate(input=compressedData)[0] != data:
-                    raise ValueError(f"Error uncompressing brotli lvl {lvl}\t{sample}")
+                    raise ValueError(f"Error uncompressing brotli lvl {lvl}")
 
                 # Check compressed size
                 if i != 0 and compressedSize != len(compressedData):
@@ -103,13 +101,13 @@ def brotli():
                 localTimes.append(utime + stime)
 
             # store results
-            sizes[sample]["brotli"][lvl] = compressedSize
-            times[sample]["brotli"][lvl] = sum(localTimes) / ROUNDS
+            sizes[lvl] = compressedSize
+            times[lvl] = sum(localTimes) / ROUNDS
+        return sizes, times
 
-def lzo():
-    global sizes
-    global times
-    for sample, data in samples.items():
+    def lzo(self, data):
+        sizes = {}
+        times = {}
         for lvl in range(1, 10):
             localTimes = []
             compressedSize = 0
@@ -137,13 +135,13 @@ def lzo():
                 localTimes.append(utime + stime)
 
             # store results
-            sizes[sample]["lzo"][lvl] = compressedSize
-            times[sample]["lzo"][lvl] = sum(localTimes) / ROUNDS
+            sizes[lvl] = compressedSize
+            times[lvl] = sum(localTimes) / ROUNDS
+        return sizes, times
 
-def zstd():
-    global sizes
-    global times
-    for sample, data in samples.items():
+    def zstd(self, data):
+        sizes = {}
+        times = {}
         for lvl in range(1, 20):
             localTimes = []
             compressedSize = 0
@@ -171,13 +169,13 @@ def zstd():
                 localTimes.append(utime + stime)
 
             # store results
-            sizes[sample]["zstd"][lvl] = compressedSize
-            times[sample]["zstd"][lvl] = sum(localTimes) / ROUNDS
+            sizes[lvl] = compressedSize
+            times[lvl] = sum(localTimes) / ROUNDS
+        return sizes, times
 
-def lzma():
-    global sizes
-    global times
-    for sample, data in samples.items():
+    def lzma(self, data):
+        sizes = {}
+        times = {}
         for lvl in range(10):
             localTimes = []
             compressedSize = 0
@@ -205,13 +203,13 @@ def lzma():
                 localTimes.append(utime + stime)
 
             # store results
-            sizes[sample]["lzma"][lvl] = compressedSize
-            times[sample]["lzma"][lvl] = sum(localTimes) / ROUNDS
+            sizes[lvl] = compressedSize
+            times[lvl] = sum(localTimes) / ROUNDS
+        return sizes, times
 
-def bzip2():
-    global sizes
-    global times
-    for sample, data in samples.items():
+    def bzip2(self, data):
+        sizes = {}
+        times = {}
         for lvl in range(1, 10):
             localTimes = []
             compressedSize = 0
@@ -239,29 +237,29 @@ def bzip2():
                 localTimes.append(utime + stime)
 
             # store results
-            sizes[sample]["bzip2"][lvl] = compressedSize
-            times[sample]["bzip2"][lvl] = sum(localTimes) / ROUNDS
+            sizes[lvl] = compressedSize
+            times[lvl] = sum(localTimes) / ROUNDS
+        return sizes, times
 
-def lzmh(useReportedTime=False):
-    global sizes
-    global times
-    binPath = "./data-compressor/DataCompressor/build/gcc/"
-    for sample, data in samples.items():
+    def lzmh(self, data, useReportedTime=False):
+        sizes = {}
+        times = {}
+        binPath = "./data-compressor/DataCompressor/build/gcc/"
         for lvl in range(1):
             localTimes = []
             compressedSize = 0
             for i in range(ROUNDS):
                 print(f"lzmh {lvl}")
                 usageStart = resource.getrusage(resource.RUSAGE_CHILDREN)
-                process = Popen([f"{binPath}DCCLI", f"data/{sample}.bin", "compressed.tmp", "encode", "lzmh"], stdout=PIPE)
+                process = Popen([f"{binPath}DCCLI", data, "compressed.tmp", "encode", "lzmh"], stdout=PIPE)
                 result = process.communicate()[0].decode("utf-8")
                 usageEnd = resource.getrusage(resource.RUSAGE_CHILDREN)
 
                 # check decompression
                 process = Popen([f"{binPath}DCCLI", "compressed.tmp", "uncompressed.tmp", "decode", "lzmh"], stdout=PIPE)
                 process.wait()
-                if not filecmp.cmp(f"data/{sample}.bin", "uncompressed.tmp", False):
-                    raise ValueError(f"Error uncompressing lzmh lvl {lvl}\t{sample}")
+                if not filecmp.cmp(data, "uncompressed.tmp", False):
+                    raise ValueError(f"Error uncompressing lzmh lvl {lvl}")
 
                 # Check compressed size
                 actualSize = os.path.getsize("compressed.tmp")
@@ -285,26 +283,49 @@ def lzmh(useReportedTime=False):
                     localTimes.append(elapsedTime)
 
             # store results
-            sizes[sample]["lzmh"][lvl] = compressedSize
-            times[sample]["lzmh"][lvl] = sum(localTimes) / ROUNDS
+            sizes[lvl] = compressedSize
+            times[lvl] = sum(localTimes) / ROUNDS
+        return sizes, times
 
+def getMeanDict(dictList):
+    resultDict = defaultdict(lambda: 0)
+    for entry in dictList:
+        for lvl, data in entry.items():
+            resultDict[lvl] += data
+    
+    for lvl, entry in resultDict.items():
+        resultDict[lvl] = entry / len(dictList)
+    return resultDict
 
 def main():
+    global sizes, times
+
     init()
 
-    zlib()
-    brotli()
-    lzo()
-    zstd()
-    lzma()
-    bzip2()
-    lzmh()
+    for algo in algorithms:
+        compressionAlgo = getattr(Algos(), algo)
+        for sampleType, sampleList in samples.items():
+            sizeList = []
+            timeList = []
+            cnt = 0
+            for sample in sampleList:
+                if algo == "lzmh":
+                    resultSizes, resultTimes = compressionAlgo(f"data/new/{sampleType}{cnt}.bin")
+                    cnt += 1
+                else:
+                    resultSizes, resultTimes = compressionAlgo(sample)
+                sizeList.append(resultSizes)
+                timeList.append(resultTimes)
+            meanSizes = getMeanDict(sizeList)
+            meanTimes = getMeanDict(timeList)
+            sizes[sampleType][algo] = meanSizes
+            times[sampleType][algo] = meanTimes
     
     j = {}
     j["times"] = times
     j["sizes"] = sizes
 
-    with open("results.json","w") as file:
+    with open("results/resultsImages.json","w") as file:
         json.dump(j, file)
 
 

@@ -1,0 +1,111 @@
+Run 1: (Debug Build)
+Elapsed time in microseconds: 76692 µs
+Elapsed time in microseconds: 76678 µs
+Elapsed time in microseconds: 77776 µs
+Elapsed time in microseconds: 25325 µs
+Elapsed time in microseconds: 78795 µs
+Elapsed time in microseconds: 25335 µs
+Elapsed time in microseconds: 25584 µs
+Elapsed time in microseconds: 79150 µs
+Elapsed time in microseconds: 76091 µs
+Elapsed time in microseconds: 76998 µs
+
+Run 2:
+[dtnproxy-1] Elapsed time in microseconds: 79581 µs
+[dtnproxy-1] Elapsed time in microseconds: 81664 µs
+[dtnproxy-1] Elapsed time in microseconds: 82449 µs
+[dtnproxy-1] Elapsed time in microseconds: 25389 µs
+[dtnproxy-1] Elapsed time in microseconds: 82669 µs
+[dtnproxy-1] Elapsed time in microseconds: 24738 µs
+[dtnproxy-1] Elapsed time in microseconds: 24399 µs
+[dtnproxy-1] Elapsed time in microseconds: 81598 µs
+[dtnproxy-1] Elapsed time in microseconds: 85776 µs
+[dtnproxy-1] Elapsed time in microseconds: 79636 µs
+
+Run 3: lodepng sim images
+[dtnproxy-1] Elapsed time in microseconds: 80467 µs
+[dtnproxy-1] Elapsed time in microseconds: 81426 µs
+[dtnproxy-1] Elapsed time in microseconds: 81280 µs
+[dtnproxy-1] Elapsed time in microseconds: 25006 µs
+[dtnproxy-1] Elapsed time in microseconds: 81891 µs
+[dtnproxy-1] Elapsed time in microseconds: 24775 µs
+[dtnproxy-1] Elapsed time in microseconds: 24459 µs
+[dtnproxy-1] Elapsed time in microseconds: 82242 µs
+[dtnproxy-1] Elapsed time in microseconds: 78562 µs
+[dtnproxy-1] Elapsed time in microseconds: 79134 µs
+
+Compression Ratio:
+Mean raw size: 921672
+Mean compressed size: 1916256 / 10 = 191625,6
+Ratio: 4.81
+Time: 0.0639242s
+
+
+Run 4:
+[dtnproxy-1] Elapsed time in microseconds: 125663 µs
+[dtnproxy-1] Elapsed time in microseconds: 180734 µs
+[dtnproxy-1] Elapsed time in microseconds: 172201 µs
+[dtnproxy-1] Elapsed time in microseconds: 145129 µs
+[dtnproxy-1] Elapsed time in microseconds: 200790 µs
+[dtnproxy-1] Elapsed time in microseconds: 268816 µs
+[dtnproxy-1] Elapsed time in microseconds: 275466 µs
+[dtnproxy-1] Elapsed time in microseconds: 254589 µs
+[dtnproxy-1] Elapsed time in microseconds: 205287 µs
+[dtnproxy-1] Elapsed time in microseconds: 257274 µs
+
+Compression Ratio:
+Mean raw size: 3418032
+Mean compressed size: 8239233 / 10 = 823923.3
+Ratio: 2.07
+Time: 0.208594s
+
+
+Run 5: new Algorithm, real Images
+[dtnproxy-1] Elapsed time in microseconds: 6668 µs
+[dtnproxy-1] Elapsed time in microseconds: 7292 µs
+[dtnproxy-1] Elapsed time in microseconds: 6986 µs
+[dtnproxy-1] Elapsed time in microseconds: 6705 µs
+[dtnproxy-1] Elapsed time in microseconds: 7838 µs
+[dtnproxy-1] Elapsed time in microseconds: 9158 µs
+[dtnproxy-1] Elapsed time in microseconds: 8566 µs
+[dtnproxy-1] Elapsed time in microseconds: 8913 µs
+[dtnproxy-1] Elapsed time in microseconds: 6977 µs
+[dtnproxy-1] Elapsed time in microseconds: 8799 µs
+
+Compression Ratio:
+Mean raw size: 3418036
+Mean compressed size: 11641186 / 10 = 1164118.6
+Ratio: 2.94
+Time: 0,00779s
+
+
+Run 6: Rerun
+[dtnproxy-1] Elapsed time in microseconds: 6594 µs
+[dtnproxy-1] Elapsed time in microseconds: 7334 µs
+[dtnproxy-1] Elapsed time in microseconds: 7038 µs
+[dtnproxy-1] Elapsed time in microseconds: 6713 µs
+[dtnproxy-1] Elapsed time in microseconds: 8003 µs
+[dtnproxy-1] Elapsed time in microseconds: 9440 µs
+[dtnproxy-1] Elapsed time in microseconds: 8921 µs
+[dtnproxy-1] Elapsed time in microseconds: 9535 µs
+[dtnproxy-1] Elapsed time in microseconds: 7226 µs
+[dtnproxy-1] Elapsed time in microseconds: 9012 µs
+
+
+Run 7: new Algorithm, sim Images
+[dtnproxy-1] Elapsed time in microseconds: 1665 µs
+[dtnproxy-1] Elapsed time in microseconds: 1602 µs
+[dtnproxy-1] Elapsed time in microseconds: 1691 µs
+[dtnproxy-1] Elapsed time in microseconds: 1364 µs
+[dtnproxy-1] Elapsed time in microseconds: 1416 µs
+[dtnproxy-1] Elapsed time in microseconds: 1339 µs
+[dtnproxy-1] Elapsed time in microseconds: 1404 µs
+[dtnproxy-1] Elapsed time in microseconds: 1443 µs
+[dtnproxy-1] Elapsed time in microseconds: 1538 µs
+[dtnproxy-1] Elapsed time in microseconds: 1557 µs
+
+Compression Ratio:
+Mean raw size: 921672
+Mean compressed size: 3123941 / 10 = 312394,1
+Ratio: 2.95
+Time: 0,001502s

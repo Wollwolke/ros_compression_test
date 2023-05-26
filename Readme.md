@@ -18,5 +18,5 @@ Algorithms:
 
 Images:
 
-- libpng
-- libjpeg
+- lodepng
+- qoixx
